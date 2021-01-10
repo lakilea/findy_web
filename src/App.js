@@ -8,7 +8,7 @@ import {
 import HomeScreen from "./pages/home";
 import QrScreen from "./pages/qr";
 
-function App() {
+export default function App() {
   return (
     <Router>
       <div>
@@ -24,5 +24,3 @@ function App() {
     </Router>
   );
 }
-
-export default App;
