@@ -1,0 +1,25 @@
+html {
+  background-color: #282b3f;
+}
+
+.container {
+  margin: auto;
+  padding: 10px;
+}
+
+.headerText {
+  color: #FFFFFF;
+  text-align: center;
+  border: 1px solid #FFFF00;
+  padding: 10px;
+}
+
+.qr-desc {
+  color: #FFFFFF;
+  padding: 10px;
+}
+
+.qr-item {
+  color: #FFFFFF;
+  padding: 10px;
+}
