@@ -19,7 +19,32 @@ export default function QrScreen() {
     .doc(qrKey)
     .onSnapshot(x => {
       setState(x.data());
-      console.log(x.data())
+      
+      const userId = x.data().userId;
+      const currentTimeStamp = new Date().getTime();
+      const oneHourLater = new Date().getTime() + (1*60*60*1000);
+
+      firestore.collection("Users").doc(userId).onSnapshot(u => {
+        firestore.collection("NotificationQueue").where("userId", "==", userId).where("expiredAt",">",currentTimeStamp).onSnapshot(prevSnapShot=> {
+          if(prevSnapShot.docs.length === 0)
+          {
+            firestore.collection("NotificationQueue").add({
+              text:"'" + x.data().qrName + "' QR has been scanned by someone!",
+              fcmToken : u.data().fcmToken,
+              userId: userId,
+              timestamp: currentTimeStamp,
+              expiredAt: oneHourLater
+            });
+    
+            firestore.collection("UserNotifications").add({
+              text:"'" + x.data().qrName + "' QR has been scanned by someone!",
+              isRead: false,
+              navigation: null,
+              userId: userId
+            });
+          }
+        });
+      });
     });
 
     return unsubscribe;
