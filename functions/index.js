@@ -30,3 +30,44 @@ exports.sendNewNotification = functions.firestore.document("NotificationQueue/{d
 
   return 0;
 });
+
+exports.getQr = functions.https.onCall((data, context) => {
+  const id = data.id;
+  const local = data.local;
+
+  const firestore = admin.firestore();
+
+  return firestore.collection('UserQRCodes').doc(id).get().then(x=> {
+    if (!local) {
+      const userId = x.data().userId;
+      const currentTimeStamp = new Date().getTime();
+      const oneHourLater = new Date().getTime() + (1*60*60*1000);
+
+      firestore.collection("Users").doc(userId).onSnapshot(u => {
+        const userFcmToken = u.data().fcmToken;
+
+        firestore.collection("NotificationQueue").where("userId", "==", userId).where("expiredAt",">",currentTimeStamp).onSnapshot(prevSnapShot=> {
+          if(prevSnapShot.docs.length === 0)
+          {
+            firestore.collection("NotificationQueue").add({
+              text:"'" + x.data().qrName + "' QR has been scanned by someone!",
+              fcmToken : userFcmToken,
+              userId: userId,
+              timestamp: currentTimeStamp,
+              expiredAt: oneHourLater
+            });
+    
+            firestore.collection("UserNotifications").add({
+              text:"'" + x.data().qrName + "' QR has been scanned by someone!",
+              isRead: false,
+              navigation: null,
+              userId: userId,
+              timestamp: currentTimeStamp
+            });
+          }
+        });
+      });
+    }
+    return x.data();
+  });
+});

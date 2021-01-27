@@ -4,50 +4,53 @@ import { useLocation} from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee, faEnvelope, faLocationArrow, faPhone } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import firestore from "../../firestore";
+import firebase from "../../firebase-config";
 import logo from "../../assets/logo.png";
 
 export default function QrScreen() {
   const qrKey = new URLSearchParams(useLocation().search).get("code");
+  const local = new URLSearchParams(useLocation().search).get("m");
   const [state, setState] = useState({
     selectedItems : []
   });
 
   useEffect(()=> {
-    const unsubscribe = firestore
-    .collection('UserQRCodes')
-    .doc(qrKey)
-    .onSnapshot(x => {
-      setState(x.data());
+    const getQr = firebase.functions().httpsCallable("getQr");
+
+    getQr({ id : qrKey, local : local}).then((result) => {
+      setState(result.data);
+
+      if (!local) {
+        const userId = result.userId;
+        const currentTimeStamp = new Date().getTime();
+        const oneHourLater = new Date().getTime() + (1*60*60*1000);
+
+        // firestore.collection("Users").doc(userId).onSnapshot(u => {
+        //   firestore.collection("NotificationQueue").where("userId", "==", userId).where("expiredAt",">",currentTimeStamp).onSnapshot(prevSnapShot=> {
+        //     if(prevSnapShot.docs.length === 0)
+        //     {
+        //       firestore.collection("NotificationQueue").add({
+        //         text:"'" + result.qrName + "' QR has been scanned by someone!",
+        //         fcmToken : u.data().fcmToken,
+        //         userId: userId,
+        //         timestamp: currentTimeStamp,
+        //         expiredAt: oneHourLater
+        //       });
       
-      const userId = x.data().userId;
-      const currentTimeStamp = new Date().getTime();
-      const oneHourLater = new Date().getTime() + (1*60*60*1000);
-
-      firestore.collection("Users").doc(userId).onSnapshot(u => {
-        firestore.collection("NotificationQueue").where("userId", "==", userId).where("expiredAt",">",currentTimeStamp).onSnapshot(prevSnapShot=> {
-          if(prevSnapShot.docs.length === 0)
-          {
-            firestore.collection("NotificationQueue").add({
-              text:"'" + x.data().qrName + "' QR has been scanned by someone!",
-              fcmToken : u.data().fcmToken,
-              userId: userId,
-              timestamp: currentTimeStamp,
-              expiredAt: oneHourLater
-            });
-    
-            firestore.collection("UserNotifications").add({
-              text:"'" + x.data().qrName + "' QR has been scanned by someone!",
-              isRead: false,
-              navigation: null,
-              userId: userId
-            });
-          }
-        });
-      });
+        //       firestore.collection("UserNotifications").add({
+        //         text:"'" + result.qrName + "' QR has been scanned by someone!",
+        //         isRead: false,
+        //         navigation: null,
+        //         userId: userId
+        //       });
+        //     }
+        //   });
+        // });
+      }
+    })
+    .catch((error) => {
+      debugger
     });
-
-    return unsubscribe;
   },[qrKey]);
 
   return (
