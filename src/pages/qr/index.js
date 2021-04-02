@@ -6,6 +6,7 @@ import { faCoffee, faEnvelope, faLocationArrow, faPhone } from '@fortawesome/fre
 import { faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import firebase from "../../firebase-config";
 import logo from "../../assets/logo.png";
+import loading from "../../assets/icons/loading.gif"
 
 export default function QrScreen() {
   const qrKey = new URLSearchParams(useLocation().search).get("code");
@@ -13,12 +14,14 @@ export default function QrScreen() {
   const [state, setState] = useState({
     selectedItems : []
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(()=> {
     const getQr = firebase.functions().httpsCallable("getQr");
 
     getQr({ id : qrKey, local : local}).then((result) => {
       setState(result.data);
+      setIsLoading(false);
     })
     .catch((error) => {
       debugger
@@ -26,6 +29,11 @@ export default function QrScreen() {
   },[qrKey]);
 
   return (
+    isLoading ?
+    <div className="loading-container">
+      <img src={loading} className="loading-icon"></img>
+    </div>
+    :
     state.selectedItems.length > 0 ? 
     <div className="container">
       <div className="header">
