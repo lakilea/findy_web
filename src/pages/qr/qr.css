@@ -4,6 +4,7 @@ html {
 
 body {
   font-family: "SF-Pro-Display";
+  overflow: hidden;
 }
 
 .container {
@@ -34,4 +35,27 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.chat-container {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+  background-color: #f69833;
+  padding: 15px;
+}
+
+.chat-button {
+  color: #f4f4f4;
+  font-size: large  ;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a {
+  text-decoration: none;
+  color: #1f1f1f;
 }
