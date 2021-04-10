@@ -43,7 +43,8 @@ body {
   text-align: center;
   width: 100%;
   background-color: #f69833;
-  padding: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .chat-button {
