@@ -1,0 +1,43 @@
+html {
+  background-color: #f4f4f4;
+}
+
+body {
+  font-family: "SF-Pro-Display";
+  overflow: auto !important;
+}
+
+.container {
+  margin: auto;
+  padding: 10px;
+}
+
+.loading-icon {
+  width: 32px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.product-header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 25px;
+}
+
+.product-qr-details{
+  margin-top: 5px;
+}
+
+.product-quantity {
+  margin-top: 5px;
+}
+
+select {
+  display: inline-block;
+  width: 100%;
+  font-size: 20px;
+  padding: 5px;
+  border-color: #CCC;
+}

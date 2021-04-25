@@ -8,6 +8,7 @@ import {
 import HomeScreen from "./pages/home";
 import QrScreen from "./pages/qr";
 import PrivacyScreen from "./pages/privacy";
+import OrderScreen from "./pages/order"
 
 export default function App() {
   return (
@@ -16,6 +17,9 @@ export default function App() {
         <Switch>
           <Route path="/qr">
             <QrScreen />
+          </Route>
+          <Route path="/order">
+            <OrderScreen />
           </Route>
           <Route path="/findy-privacy-policy">
             <PrivacyScreen />
