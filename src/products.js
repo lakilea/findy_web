@@ -1,6 +1,6 @@
 export const products = [
   {
-    "code" : 1,
+    "code" : "1",
     "name" : "Luggage tag",
     "maxQuantity":10,
     "images" : [

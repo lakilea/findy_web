@@ -1,0 +1,13 @@
+html {
+  background-color: #f4f4f4;
+}
+
+body {
+  font-family: "SF-Pro-Display";
+  overflow: auto !important;
+}
+
+.container {
+  margin: auto;
+  padding: 10px;
+}
